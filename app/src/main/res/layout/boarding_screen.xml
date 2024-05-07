@@ -40,14 +40,23 @@
 
     />
     <Button
+<<<<<<< HEAD
         android:layout_width="200dp"
         android:layout_height="70dp"
+=======
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+>>>>>>> 05e51de97ca1ebf85c5973432e763f44480140b0
         android:text="Get Started"
         android:fontFamily="serif"
         android:textSize="20dp"
         android:layout_gravity="center_horizontal"
+<<<<<<< HEAD
         android:backgroundTint="@color/black"
 
+=======
+        android:background="#000000"
+>>>>>>> 05e51de97ca1ebf85c5973432e763f44480140b0
         />
 
 
