@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="bottom_navigation_item_color">#FFFFFF</color>
+    <color name="bottom_navigation_item_color_normal">#808080</color>
+    <color name="bottom_navigation_item_color_selected">#000000</color>
+    <color name="bottom_navigation_color_normal">#808080</color>
+    <color name="bottom_navigation_color_selected">#000000</color>
+
 </resources>
