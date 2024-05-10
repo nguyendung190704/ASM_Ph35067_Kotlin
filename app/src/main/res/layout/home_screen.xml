@@ -49,8 +49,8 @@
                 android:text="BEAUTIFUL"/>
         </LinearLayout>
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/img_2"
             android:padding="6dp"
             android:layout_gravity="center_vertical"/>
