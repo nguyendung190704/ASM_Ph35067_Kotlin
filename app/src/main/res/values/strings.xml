@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">ASM_Ph35067_Kotlin</string>
+    <string name="title_activity_boarding">Boarding</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_signup">Signup</string>
+    <string name="title_activity_home">Home</string>
+    <string name="title_activity_b2">b2</string>
+    <string name="title_activity_my_cart">MyCart</string>
+    <string name="title_activity_product">Product</string>
+    <string name="title_activity_favorite">favorite</string>
+    <string name="title_activity_congrats">Congrats</string>
+    <string name="title_activity_rating_review">RatingReview</string>
+    <string name="title_activity_checkout">Checkout</string>
+    <string name="title_activity_profile">Profile</string>
 </resources>
