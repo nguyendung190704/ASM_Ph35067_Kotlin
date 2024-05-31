@@ -1,37 +1,19 @@
 package com.example.asm_ph35067_kotlin
 
 import android.os.Bundle
-import android.widget.EditText
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,64 +24,74 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.asm_ph35067_kotlin.model.ModelUser
 
 class Signup : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SignupScreen()
+            val navController = rememberNavController()
+            NavHost(navController = navController, startDestination = "signup") {
+                composable("signup") { SignupScreen(navController) }
+                composable("login") { LoginScreen(navController) }
+                composable("home") { HomeScreen() }
+            }
         }
     }
 }
 
-
 @Composable
-fun SignupScreen() {
+fun SignupScreen(navController: NavController) {
     var name by remember { mutableStateOf("") }
     var confirmpassword by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+    var imgUrlUser by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var errorText by remember { mutableStateOf("") }
+    val users = remember { mutableStateListOf(*ModelUser.getModelUser().toTypedArray()) }
+    var emailError by remember { mutableStateOf<String?>(null) }
+    var passwordError by remember { mutableStateOf<String?>(null) }
+    var nameError by remember { mutableStateOf<String?>(null) }
+    var linkanhError by remember { mutableStateOf<String?>(null) }
+    var ConfirmPasswordError by remember { mutableStateOf<String?>(null) }
     Box(
         modifier = Modifier.fillMaxSize(),
-    ){
+    ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
         ) {
             Text(
                 text = "",
                 modifier = Modifier
-                    .wrapContentSize()
-                    .background(Color(0x66000000))
-                    .width(120.dp)
-                    .height(1.dp),
-
-                )
-            Spacer(modifier = Modifier.width(1.dp)) // Khoảng trống
+                    .padding(top = 34.dp)
+                    .height(1.dp)
+                    .width(100.dp)
+                    .background(Color(0x94000000))
+                    .weight(1f)
+            )
             Image(
                 painter = painterResource(id = R.drawable.img_1),
                 contentDescription = null,
-                modifier = Modifier.size(100.dp)
+                modifier = Modifier.size(70.dp)
             )
-            Spacer(modifier = Modifier.width(1.dp)) // Khoảng trống
             Text(
                 text = "",
                 modifier = Modifier
-                    .wrapContentSize()
-                    .background(Color(0x66000000))
-                    .width(120.dp)
-                    .height(1.dp),
-
-                )
+                    .padding(top = 34.dp)
+                    .height(1.dp)
+                    .width(100.dp)
+                    .background(Color(0x94000000))
+                    .weight(1f)
+            )
         }
 
         Text(
             text = "WELCOME",
-            modifier = Modifier.padding(bottom = 16.dp, top = 100.dp, start = 16.dp),
+            modifier = Modifier.padding(bottom = 16.dp, top = 50.dp, start = 16.dp),
             color = Color(0xFF000000),
             fontFamily = FontFamily.Serif,
             fontSize = 25.sp,
@@ -108,49 +100,129 @@ fun SignupScreen() {
 
         Column(
             modifier = Modifier
-                .padding(top = 150.dp)
+                .padding(top = 100.dp)
                 .width(310.dp)
-                .background(Color.White,shape = RoundedCornerShape(20.dp))
-        ){
+                .background(Color.White, shape = RoundedCornerShape(20.dp))
+                .padding(horizontal = 16.dp)
+        ) {
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(16.dp,),
+                    .padding(horizontal = 16.dp),
                 value = name,
-                onValueChange = { name = it },
-                label = { Text("name") },
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp,),
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("Email") },
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(16.dp,),
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Password") },
-                visualTransformation = PasswordVisualTransformation()
+                onValueChange = { name = it
+                                nameError = if (validateName(it)) null else "Name must be longer than 5 characters and contain no digits."},
+                label = { Text("Name") },
+                isError = nameError != null,
 
-            )
+                )
+            if (nameError != null) {
+                Text(
+                    text = nameError ?: "",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
             OutlinedTextField(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp,),
+                    .padding(horizontal = 16.dp),
+                value = email,
+                onValueChange = {
+                    email = it
+                    emailError = if (validateEmail(it)) null else "Invalid email format"
+                },
+                label = { Text("Email") },
+                isError = emailError != null,
+
+                )
+            if (emailError != null) {
+                Text(
+                    text = emailError ?: "",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp),
+                value = imgUrlUser,
+                onValueChange = { imgUrlUser = it
+                                linkanhError = if (validateImageUrl(it)) null else "Image URL cannot be blank."},
+                label = { Text("Link image") },
+                isError = linkanhError != null,
+
+                )
+            if (linkanhError != null) {
+                Text(
+                    text = linkanhError ?: "",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp),
+                value = password,
+                onValueChange = { password = it
+                                passwordError = if (validatePassword(it)) null else "Password must be longer than 5 characters."},
+                label = { Text("Password") },
+                visualTransformation = PasswordVisualTransformation(),
+                isError = passwordError != null,
+
+                )
+            if (passwordError != null) {
+                Text(
+                    text = passwordError ?: "",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp),
                 value = confirmpassword,
                 onValueChange = { confirmpassword = it },
                 label = { Text("Confirm Password") },
-                visualTransformation = PasswordVisualTransformation()
-            )
+                visualTransformation = PasswordVisualTransformation(),
+                isError = ConfirmPasswordError != null,
+
+                )
+            if (ConfirmPasswordError != null) {
+                Text(
+                    text = ConfirmPasswordError ?: "",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
             Box(
                 contentAlignment = Alignment.TopCenter,
                 modifier = Modifier
-                    .padding(top = 20.dp,bottom = 20.dp)
+                    .padding(top = 20.dp, bottom = 20.dp)
                     .fillMaxWidth()
-            ){
+            ) {
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        if (!validateConfirmPassword(password, confirmpassword)) {
+                            ConfirmPasswordError = "Passwords do not match."
+                            return@Button
+                        } else {
+                            ConfirmPasswordError = null
+                        }
+                            users.add(
+                                ModelUser(
+                                    id_user = users.size + 1,
+                                    name_user = name,
+                                    email_user = email,
+                                    img_user = imgUrlUser,
+                                    password_user = password
+                                )
+                            )
+                            navController.navigate("home")
+                    },
                     modifier = Modifier
                         .background(Color(0xFF000000), shape = RoundedCornerShape(10.dp))
                         .width(200.dp)
@@ -159,14 +231,25 @@ fun SignupScreen() {
                         containerColor = Color(0x00000000),
                         contentColor = Color.White,
                     )
-                ){
+                ) {
                     Text(
                         text = "Sign Up",
                         color = Color.White,
                         fontSize = 20.sp,
-
-                        )
+                    )
                 }
+
+                // Hiển thị thông báo lỗi nếu có
+                if (errorText.isNotEmpty()) {
+                    Text(
+                        text = errorText,
+                        color = Color.Red,
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+
+                // Điều hướng đến màn hình đăng nhập nếu đã có tài khoản
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -174,30 +257,51 @@ fun SignupScreen() {
                         .wrapContentHeight(),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
-
                 ) {
                     Text(
-                        text = "Already have account ?",
-                        modifier = Modifier
-                            .wrapContentSize()
-                        )
+                        text = "Already have an account?",
+                        modifier = Modifier.wrapContentSize()
+                    )
 
                     Text(
                         text = "SIGN IN",
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .wrapContentSize()
-                        )
+                            .clickable { navController.navigate("login") }
+                            .padding(start = 8.dp)
+                    )
                 }
             }
         }
     }
 }
 
+fun validateName(name: String): Boolean {
+    return name.length > 5 && !name.any { it.isDigit() }
+}
+
+fun validateEmail(email: String): Boolean {
+    val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$"
+    return email.matches(emailRegex.toRegex())
+}
+
+fun validateImageUrl(url: String): Boolean {
+    return url.isNotBlank()
+}
+
+fun validatePassword(password: String): Boolean {
+    return password.length > 5
+}
+
+fun validateConfirmPassword(password: String, confirmPassword: String): Boolean {
+    return password == confirmPassword
+}
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview2() {
-        SignupScreen()
-
+fun SignupScreenPreview() {
+    val navController = rememberNavController()
+    SignupScreen(navController)
 }
+

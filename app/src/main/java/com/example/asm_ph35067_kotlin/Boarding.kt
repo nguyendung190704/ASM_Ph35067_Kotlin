@@ -1,5 +1,6 @@
 package com.example.asm_ph35067_kotlin
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,13 +25,18 @@ class Boarding : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            BoardingScreen()
+            BoardingScreen { navigateToLogin() }
         }
+    }
+
+    private fun navigateToLogin() {
+        val intent = Intent(this, Login::class.java)
+        startActivity(intent)
     }
 }
 
 @Composable
-fun BoardingScreen() {
+fun BoardingScreen(onGetStartedClick: () -> Unit) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -61,7 +66,7 @@ fun BoardingScreen() {
                 fontFamily = FontFamily.Serif,
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold,
-                )
+            )
             Text(
                 text = "The best simple place where you discover most wonderful furnitures and make your home beautiful",
                 lineHeight = 32.sp,
@@ -75,7 +80,7 @@ fun BoardingScreen() {
                     .wrapContentHeight()
             ) {
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = onGetStartedClick,
                     modifier = Modifier
                         .background(Color(0xFF000000), shape = RoundedCornerShape(10.dp))
                         .width(200.dp)
@@ -84,15 +89,14 @@ fun BoardingScreen() {
                         containerColor = Color(0x00000000),
                         contentColor = Color.White,
                     )
-                ){
+                ) {
                     Text(
                         text = "Get started",
                         color = Color.White,
                         fontSize = 20.sp,
                         fontFamily = FontFamily.Serif,
                         fontWeight = FontWeight.Bold,
-
-                        )
+                    )
                 }
             }
         }
@@ -101,10 +105,6 @@ fun BoardingScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview4() { BoardingScreen()
-
+fun BoardingScreenPreview() {
+    BoardingScreen {}
 }
-
-
-
-

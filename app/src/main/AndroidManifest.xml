@@ -63,7 +63,7 @@
             android:label="@string/title_activity_signup"
             android:theme="@style/Theme.ASM_Ph35067_Kotlin" />
         <activity
-            android:name=".Boarding"
+            android:name=".Home"
             android:exported="false"
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.ASM_Ph35067_Kotlin" />
@@ -73,7 +73,7 @@
             android:label="@string/title_activity_boarding"
             android:theme="@style/Theme.ASM_Ph35067_Kotlin" />
         <activity
-            android:name=".Home"
+            android:name=".Boarding"
             android:exported="true"
             android:label="@string/title_activity_boarding"
             android:theme="@style/Theme.ASM_Ph35067_Kotlin">

@@ -100,5 +100,7 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-manifest:1.1.0-alpha02")
     implementation("com.google.accompanist:accompanist-pager:0.19.0")
     implementation("io.coil-kt:coil-compose:2.6.0")
-
+    implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation("androidx.compose.ui:ui:1.3.3")
+    implementation("androidx.compose.material3:material3:1.0.1")
 }
