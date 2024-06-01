@@ -13,4 +13,7 @@
     <string name="title_activity_checkout">Checkout</string>
     <string name="title_activity_profile">Profile</string>
     <string name="title_activity_product_view_model">ProductViewModel</string>
+    <string name="title_activity_main_screen">MainScreen</string>
+    <string name="title_activity_main">Main</string>
+    <string name="title_activity_notification">Notification</string>
 </resources>

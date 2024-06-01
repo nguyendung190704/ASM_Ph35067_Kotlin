@@ -26,6 +26,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +42,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import com.example.asm_ph35067_kotlin.model.ModelProduct
 import kotlin.math.ceil
 
 class favorite : ComponentActivity() {
@@ -51,6 +57,7 @@ class favorite : ComponentActivity() {
 
 @Composable
 fun FavoriteScreen() {
+    var favoriteProducts by remember { mutableStateOf(ModelProduct.getModelProduct().filter { it.favorite_prod == 1 }) }
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -59,11 +66,31 @@ fun FavoriteScreen() {
         ) {
             TopBarFavorite()
             Spacer(modifier = Modifier.height(5.dp))
-            ProductListFavorite()
+            ProductListFavorite(favoriteProducts) { productId ->
+                favoriteProducts = favoriteProducts.map {
+                    if (it.id_prod == productId) {
+                        it.copy(favorite_prod = 0)
+                    } else {
+                        it
+                    }
+                }.filter { it.favorite_prod == 1 }
+            }
             ButtonFavorite()
         }
     }
 }
+
+@Composable
+fun ProductListFavorite(products: List<ModelProduct>, onFavoriteClick: (Int) -> Unit) {
+    LazyColumn(
+        modifier = Modifier.height(490.dp),
+    ) {
+        items(products.size) { index ->
+            GridItemFavorite(products[index], onFavoriteClick)
+        }
+    }
+}
+
 
 @Composable
 fun TopBarFavorite() {
@@ -117,7 +144,7 @@ fun ButtonFavorite() {
         modifier = Modifier
             .background(Color(0xFF000000), shape = RoundedCornerShape(10.dp))
             .fillMaxWidth()
-            .height(60.dp),
+            .height(50.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color(0x00000000),
             contentColor = Color.White,
@@ -126,7 +153,7 @@ fun ButtonFavorite() {
         Text(
             text = "Add all to my cart",
             color = Color.White,
-            fontSize = 20.sp,
+            fontSize = 18.sp,
 
             )
     }
@@ -135,30 +162,17 @@ fun ButtonFavorite() {
 
 
 
-@Composable
-fun ProductListFavorite() {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(400.dp),
-    ) {
-        items(10) { index ->
-            GridItemFavorite(0)
-        }
-    }
-}
+
 
 @Composable
-fun GridItemFavorite(index: Int) {
-    if (index < 10) {
-        ProductItemFavorite()
-    } else {
-        Spacer(modifier = Modifier.width(5.dp))
-    }
+fun GridItemFavorite(modelProduct: ModelProduct, onFavoriteClick: (Int) -> Unit) {
+        ProductItemFavorite(modelProduct, onFavoriteClick)
 }
 
+
+
 @Composable
-fun ProductItemFavorite() {
+fun ProductItemFavorite(modelProduct: ModelProduct,onFavoriteClick: (Int) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -167,8 +181,8 @@ fun ProductItemFavorite() {
             .background(Color(0x05000000), shape = RoundedCornerShape(10.dp))
 
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.img_12),
+        AsyncImage(
+            model = modelProduct.imgUrl_prod,
             contentDescription = null,
             modifier = Modifier
                 .width(80.dp)
@@ -183,14 +197,14 @@ fun ProductItemFavorite() {
                 .height(105.dp)
         ) {
             Text(
-                text = "Tên sản phẩm ",
+                text = modelProduct.name_prod,
                 color = Color.Gray,
                 fontSize = 18.sp,
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(start=10.dp)
             )
             Text(
-                text = "$ 500.00",
+                text = "$ ${modelProduct.price_prod}",
                 color = Color.Black,
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleSmall,
@@ -200,7 +214,7 @@ fun ProductItemFavorite() {
         }
         Column {
             IconButton(
-                onClick = {  },
+                onClick = { onFavoriteClick(modelProduct.id_prod) },
                 modifier = Modifier.size(30.dp)
             ) {
                 Icon(

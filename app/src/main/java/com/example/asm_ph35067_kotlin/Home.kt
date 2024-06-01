@@ -60,7 +60,7 @@ fun HomeScreen() {
                 }
         ) {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp)
             ) {
                 TopBar(
                     searchText = searchText,
@@ -185,7 +185,7 @@ fun CategoryItem(imageId: Int, text: String, isSelected: Boolean, onClick: (Stri
 @Composable
 fun ProductList(products: List<ModelProduct>) {
     LazyColumn(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().height(470.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(products.chunked(2)) { pair ->

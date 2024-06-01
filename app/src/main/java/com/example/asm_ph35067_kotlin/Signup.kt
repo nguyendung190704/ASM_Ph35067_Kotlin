@@ -29,10 +29,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.asm_ph35067_kotlin.model.ModelUser
+import com.example.asm_ph35067_kotlin.model.UserRepository
 
 class Signup : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        UserRepository.init(this)
+
         setContent {
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = "signup") {
@@ -212,16 +215,15 @@ fun SignupScreen(navController: NavController) {
                         } else {
                             ConfirmPasswordError = null
                         }
-                            users.add(
-                                ModelUser(
-                                    id_user = users.size + 1,
-                                    name_user = name,
-                                    email_user = email,
-                                    img_user = imgUrlUser,
-                                    password_user = password
-                                )
-                            )
-                            navController.navigate("home")
+                        val newUser = ModelUser(
+                            id_user = UserRepository.getUsers().size + 1,
+                            name_user = name,
+                            email_user = email,
+                            img_user = imgUrlUser,
+                            password_user = password
+                        )
+                        UserRepository.addUser(newUser)
+                        navController.navigate("login")
                     },
                     modifier = Modifier
                         .background(Color(0xFF000000), shape = RoundedCornerShape(10.dp))

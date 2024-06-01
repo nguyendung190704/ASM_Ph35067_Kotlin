@@ -24,16 +24,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.asm_ph35067_kotlin.model.ModelUser
+import com.example.asm_ph35067_kotlin.model.UserRepository
 import java.util.regex.Pattern
 
 class Login : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        UserRepository.init(this)
         setContent {
             val navController = rememberNavController()
+            var selectedItem by remember { mutableStateOf("Home") }
+
             NavHost(navController = navController, startDestination = "login") {
                 composable("login") { LoginScreen(navController) }
-                composable("home") { HomeScreen() }
+                composable("main") { MainScreen() }
                 composable("signup") { SignupScreen(navController) }
             }
         }
@@ -163,11 +167,10 @@ fun LoginScreen(navController: NavController) {
 
                 Button(
                     onClick = {
-                        // Login logic using ModelUser data
                         if (isValidEmail(email) && password.length > 5) {
-                            val user = users.find { it.email_user == email && it.password_user == password }
+                            val user = UserRepository.getUsers().find { it.email_user == email && it.password_user == password }
                             if (user != null) {
-                                navController.navigate("home")
+                                navController.navigate("main")
                             } else {
                                 loginError = "Invalid email or password"
                             }

@@ -15,8 +15,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ASM_Ph35067_Kotlin"
         tools:targetApi="31">
-
-
+        <activity
+            android:name=".Notification"
+            android:exported="false"
+            android:label="@string/title_activity_notification"
+            android:theme="@style/Theme.ASM_Ph35067_Kotlin" />
+        <activity
+            android:name=".Main"
+            android:exported="false"
+            android:label="@string/title_activity_main"
+            android:theme="@style/Theme.ASM_Ph35067_Kotlin" />
         <activity
             android:name=".Profile"
             android:exported="false"
